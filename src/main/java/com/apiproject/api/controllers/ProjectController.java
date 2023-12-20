@@ -4,12 +4,12 @@
  */
 package com.apiproject.api.controllers;
 
-import com.apiproject.api.DTOS.ProjectRecordDto;
+import com.apiproject.api.DTOS.ProjectDto;
 import com.apiproject.api.entities.Project;
+import com.apiproject.api.mapstruct.ProjectMapper;
 import com.apiproject.api.repositories.ProjectRepository;
 import jakarta.validation.Valid;
 import java.util.List;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,18 +28,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProjectController {
     
     @Autowired
-    private ProjectRepository repository;
+    private ProjectRepository projectRepository;
     
     @PostMapping("/create")
-    public ResponseEntity<Project> createProject(@RequestBody @Valid ProjectRecordDto projectDto){
+    public ResponseEntity<ProjectDto> createProject(@RequestBody @Valid ProjectDto projectDto){
         var projectModel = new Project();
-        BeanUtils.copyProperties(projectDto, projectModel);
-        return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(projectModel));
+        projectModel = ProjectMapper.MAPPER.projectDtoToProject(projectDto);
+        projectModel = projectRepository.save(projectModel);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ProjectMapper.MAPPER.projectToProjectDto(projectModel));
     }
     
     @GetMapping("/findall")
-    public ResponseEntity<List<Project>> getAllProjects(){
-        return ResponseEntity.status(HttpStatus.OK).body(repository.findAll());
+    public ResponseEntity<List<ProjectDto>> getAllProjects(){
+        return ResponseEntity.status(HttpStatus.OK).body(ProjectMapper.MAPPER.projectToProjectDto(projectRepository.findAll()));
     }
     
 }

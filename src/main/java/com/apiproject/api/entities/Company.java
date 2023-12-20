@@ -9,7 +9,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,8 +17,7 @@ import lombok.Setter;
  * @author fvasques
  */
 @Entity
-@Table(name = "projects")
-public class Project {
+public class Company {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +26,6 @@ public class Project {
     
     @Column
     @Getter @Setter
-    private String project_name;
+    private String name;
     
 }

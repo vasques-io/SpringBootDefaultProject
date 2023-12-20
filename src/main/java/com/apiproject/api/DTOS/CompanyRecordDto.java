@@ -10,6 +10,6 @@ import jakarta.validation.constraints.NotBlank;
  *
  * @author fvasques
  */
-public record ProjectRecordDto(@NotBlank String project_name) {
-    
+public record CompanyRecordDto(@NotBlank String name) {
+
 }

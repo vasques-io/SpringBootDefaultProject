@@ -4,14 +4,14 @@
  */
 package com.apiproject.api.controllers;
 
-import com.apiproject.api.DTOS.UserDto;
-import com.apiproject.api.services.UserService;
+import com.apiproject.api.DTOS.CompanyRecordDto;
+import com.apiproject.api.entities.Company;
+import com.apiproject.api.repositories.CompanyRepository;
 import jakarta.validation.Valid;
-import java.util.List;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,20 +23,17 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
-@RequestMapping("/users")
-public class UserController {
+@RequestMapping("/company")
+public class CompanyController {
     
     @Autowired
-    private UserService userService;
+    private CompanyRepository repository;
     
     @PostMapping("/create")
-    public ResponseEntity<UserDto> createUser(@RequestBody @Valid UserDto userDto){        
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(userDto));
-    }
-    
-    @GetMapping("/findall")
-    public ResponseEntity<List<UserDto>> getAllUsers(){
-        return ResponseEntity.status(HttpStatus.OK).body(userService.getAllUsers());
+    public ResponseEntity<Company> createComapany(@RequestBody @Valid CompanyRecordDto companyDto){
+        var companyModel = new Company();
+        BeanUtils.copyProperties(companyDto, companyModel);
+        return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(companyModel));
     }
     
 }

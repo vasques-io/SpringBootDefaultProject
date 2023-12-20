@@ -4,7 +4,9 @@
  */
 package com.apiproject.api.services;
 
+import com.apiproject.api.DTOS.UserDto;
 import com.apiproject.api.entities.User;
+import com.apiproject.api.mapstruct.UserMapper;
 import com.apiproject.api.repositories.UserRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +21,21 @@ import org.springframework.stereotype.Service;
 public class UserService {
     
     @Autowired
-    private UserRepository repository;
+    private UserRepository userRepository;
     
-    public User create(User user){
-        return repository.save(user);
+    public UserDto create(UserDto userDto){
+        var userModel = new User();
+        
+        userModel = UserMapper.MAPPER.userDtoToUser(userDto);
+        
+        userModel = userRepository.save(userModel);
+        
+        return UserMapper.MAPPER.userToUserDto(userModel);
     }
     
-    public List<User> getAllUsers(){
-        return repository.findAll();
+    public List<UserDto> getAllUsers(){
+        List<User> users = this.userRepository.findAll();
+        return UserMapper.MAPPER.userToUserDto(users);
     }
     
 }
